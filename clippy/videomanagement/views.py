@@ -7,7 +7,9 @@ from .serializers import *
 from .models import *
 from rest_framework.permissions import IsAuthenticated, AllowAny
 from rest_framework import viewsets
-from video_utils import make_video
+from .video_utils import make_video
+
+
 class TemplatePromptView(viewsets.ModelViewSet):
     serializer_class = TemplatePromptsSerializer
     queryset = TemplatePrompts.objects.all()
@@ -34,6 +36,13 @@ class TestView(viewsets.ModelViewSet):
 
         template = TemplatePrompts.objects.get(id = template_id)
         voice_model = VoiceModels.objects.get(id = voice_id)
-        make_video(template, userprompt = prompt, title = title, voice_model = voice_model)
+
+        userprompt = UserPrompt.objects.create(template = template, prompt = prompt)
+        userprompt.save()
+
+        vid = Videos.objects.create(title = title, prompt = userprompt)
+        vid.save()
+
+        make_video(vid, template, userprompt = prompt, title = title, voice_model = voice_model, )
 
         return Response({"message": "The video has been made successfully"})

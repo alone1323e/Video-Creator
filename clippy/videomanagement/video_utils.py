@@ -5,11 +5,14 @@ from slugify import slugify
 from .file_utils import generate_directory
 from moviepy.editor import AudioFileClip, concatenate_audioclips
 from .gptUtils import get_reply
+from .models import *
 
-
-def make_video(template, userprompt, title, voice_model):
+def make_video(video,template, userprompt, title, voice_model):
     message = format_prompt(template, userprompt = userprompt, title = title)
     x = get_reply(message)
+    video.gpt_answer = x
+    video.save()
+
     syn = create_model(model = voice_model.path)
     dir_name = generate_directory(f'media\\media\\videos\\{slugify(x["title"])}')
 
@@ -19,6 +22,7 @@ def make_video(template, userprompt, title, voice_model):
     for j in x["scenes"]:
         j['dialogue'] = j['dialogue'].split(':')
         sound = save(syn, j['dialogue'][1], save_path = f'{dir_name}/dialogues/{slugify(j["scene"])}.wav')
+        Speech.objects.create(file = sound, prompt = video.prompt)
         sounds.append(sound)
 
     sound_list = []
