@@ -1,11 +1,11 @@
 from TTS.utils.synthesizer import Synthesizer
 from TTS.utils.manage import ModelManager
-from shutil import which
-import espeakng
+
+"""#tts_models/en/jenny/jenny#"""
 
 
-#tts_models/en/jenny/jenny
-def create_model(model_path="C:\\Users\\mr_Dmn\\Desktop\\clippyv2\clippy\\videomanagement\\.models.json", model="tts_models/en/ljspeech/tacotron2-DDC", vocoder="default_vocoder"):
+def create_model(model_path="C:\\Users\\mr_Dmn\\Desktop\\clippyv2\clippy\\videomanagement\\.models.json",
+                 model="tts_models/en/ljspeech/tacotron2-DDC", vocoder="default_vocoder"):
     model_manager = ModelManager(model_path)
     model_path, config_path, model_item = model_manager.download_model(model)
     if vocoder == "default_vocoder" and model_item.get(vocoder) is not None :

@@ -7,8 +7,7 @@ from .serializers import *
 from .models import *
 from rest_framework.permissions import IsAuthenticated, AllowAny
 from rest_framework import viewsets
-from .gptUtils import make_video
-
+from video_utils import make_video
 class TemplatePromptView(viewsets.ModelViewSet):
     serializer_class = TemplatePromptsSerializer
     queryset = TemplatePrompts.objects.all()
