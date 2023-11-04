@@ -5,7 +5,7 @@ import espeakng
 
 
 #tts_models/en/jenny/jenny
-def create_model(model_path=".models.json", model="tts_models/en/ljspeech/tacotron2-DDC", vocoder="default_vocoder"):
+def create_model(model_path="C:\\Users\\mr_Dmn\\Desktop\\clippyv2\clippy\\videomanagement\\.models.json", model="tts_models/en/ljspeech/tacotron2-DDC", vocoder="default_vocoder"):
     model_manager = ModelManager(model_path)
     model_path, config_path, model_item = model_manager.download_model(model)
     if vocoder == "default_vocoder" and model_item.get(vocoder) is not None :
@@ -34,7 +34,4 @@ def create_model(model_path=".models.json", model="tts_models/en/ljspeech/tacotr
 def save(syn, text="", save_path=""):
     outputs = syn.tts(text)
     syn.save_wav(outputs, save_path)
-
-
-x = create_model()
-save(x, text = "Hello world ! How are you?",save_path = "test2.wav")
+    return save_path

@@ -48,9 +48,10 @@ class LoginSerializer(serializers.ModelSerializer):
         fields = ("username", "password", "tokens")
 
     def validate(self, attrs):
+        request = self.context['request']
         username = attrs.get("username", '')
         password = attrs.get("password", '')
-        auser = authenticate(username = username, password = password)
+        auser = authenticate(username = username, password = password, request=request)
         if not auser:
             raise AuthenticationFailed("There is not a user with that credentials")
         if not auser.is_verified:

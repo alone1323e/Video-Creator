@@ -71,10 +71,10 @@ class LoginView(generics.GenericAPIView):
             permission_classes = (AllowAny,)
 
             def post(self, request):
-                serializer = self.serializer_class(data = request.data)
+                serializer = self.serializer_class(data = request.data, context = {'request':request})
                 user = get_user_model().objects.get(username = request.data["username"])
                 serializer.is_valid(raise_exception = True)
-                user_ip = get_user_model().get_user_ip(request)
+                user_ip = Login.get_user_ip(request)
                 ips = Login.objects.filter(ip = user_ip, user = user).all()
                 if ips.count() == 0:
 
