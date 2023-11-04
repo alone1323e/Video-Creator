@@ -65,7 +65,7 @@ class Videos(AbstractModel):
     output = models.FileField(upload_to = "media/output")
 
     def __str__(self):
-        return self.title + self.id
+        return self.title + str(self.id)
 
 
 class VoiceModels(AbstractModel):

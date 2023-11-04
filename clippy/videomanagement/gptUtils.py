@@ -2,7 +2,15 @@ import g4f
 import json
 
 
-def get_reply(prompt,time = 0,format="json"):
+def check_json(json):
+    for scene in json['scenes']:
+        if ':' not in scene['dialogue']:
+            return False
+
+    return True
+
+
+def get_reply(prompt, time=0, format="json"):
     time += 1
     g4f.logging = True  # enable logging
     g4f.check_version = False
@@ -13,15 +21,17 @@ def get_reply(prompt,time = 0,format="json"):
         x += message
     if format == "json":
         try:
-            return json.loads(x)
+
+            js = json.loads(x)
+            if not check_json(js):
+                raise Exception('Wrong format in dialogue')
+
+            return js
 
         except Exception:
             if time == 5:
-                return Exception("Max gpt limit is 5 , try again with different prompt !!")
+                raise Exception("Max gpt limit is 5 , try again with different prompt !!")
 
             return get_reply(prompt, time = time)
     return x
-
-
-
 
