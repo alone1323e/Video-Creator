@@ -18,8 +18,6 @@ class RegisterSerializer(serializers.ModelSerializer):
 
     def validate(self, attrs):
 
-        email = attrs.get("email")
-
         password = attrs.get("password")
 
         if relativedelta.relativedelta(datetime.now(), attrs.get("date_of_birth")).years < 18:

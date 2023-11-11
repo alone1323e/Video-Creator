@@ -26,7 +26,7 @@ class TemplatePrompts(AbstractModel):
 
 
 class Music(AbstractModel):
-    name = models.CharField(max_length = 40, blank = False)
+    name = models.CharField(max_length = 140, blank = False)
     file = models.FileField(upload_to = "media/music", blank = False)
     category = models.CharField(choices = TEMPLATE_CHOICES, max_length = 20, null = True)
 
@@ -46,13 +46,15 @@ class UserPrompt(models.Model):
 class Speech(models.Model):
     prompt = models.ForeignKey(UserPrompt, on_delete = models.CASCADE)
     file = models.FileField(upload_to = "media/speech")
+    text = models.TextField()
+
 
     def __str__(self):
         return str(self.id)
 
 
-class Image(models.Model):
-    prompt = models.ForeignKey(UserPrompt, on_delete = models.CASCADE)
+class SpeechImage(models.Model):
+    scene = models.ForeignKey(Speech, on_delete = models.CASCADE)
     file = models.ImageField(upload_to = "media/images")
 
 
@@ -78,6 +80,15 @@ class VoiceModels(AbstractModel):
         return self.path
 
 
+class Intro(AbstractModel):
+    category = models.CharField(max_length = 30, choices = TEMPLATE_CHOICES)
+    name = models.CharField(max_length = 100)
+    file = models.FileField(upload_to = "media/other/intros")
 
+
+class Outro(AbstractModel):
+    category = models.CharField(max_length = 30, choices = TEMPLATE_CHOICES)
+    name = models.CharField(max_length = 100)
+    file = models.FileField(upload_to = "media/other/outros")
 
 
