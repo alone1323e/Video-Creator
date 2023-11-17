@@ -6,3 +6,4 @@
 *.pyc
 .env
 .wav
+/videomanagement/utils/SadTalker/

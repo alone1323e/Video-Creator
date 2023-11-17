@@ -10,7 +10,7 @@ def make_scenes_speech(gpt_answer, video, voice_model, dir_name):
     for j in gpt_answer["scenes"]:
         filename = str(uuid.uuid4())
         sound = save(syn, j['dialogue']["dialogue"], save_path = f'{dir_name}/dialogues/{filename}.wav')
-        Speech.objects.create(file = sound, prompt = video.prompt, text = j['dialogue']["dialogue"])
+        Speech.objects.create(file = sound, prompt = video.prompt, text = j['dialogue']["dialogue"].strip())
         sounds.append(sound)
 
     return sounds

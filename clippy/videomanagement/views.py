@@ -5,12 +5,13 @@ from rest_framework.permissions import AllowAny
 from rest_framework import viewsets
 from .utils.video_utils import make_video
 from rest_framework.decorators import api_view, permission_classes
-from .utils.download_utils import download_playlist
+from .utils.download_utils import download_playlist, download_images
 from .utils.prompt_utils import format_prompt
 from .utils.gpt_utils import get_reply
 from .utils.audio_utils import make_scenes_speech
 from.utils.file_utils import generate_directory
 from slugify import slugify
+
 class TemplatePromptView(viewsets.ModelViewSet):
     serializer_class = TemplatePromptsSerializer
     queryset = TemplatePrompts.objects.all()
@@ -49,8 +50,14 @@ class TestView(viewsets.ModelViewSet):
         vid.gpt_answer = x
 
         dir_name = generate_directory(f'media\\media\\videos\\{slugify(x["title"])}')
-
         make_scenes_speech(x, vid, voice_model, dir_name)
+
+        for j in vid.gpt_answer['scenes']:
+            scene = Speech.objects.get(prompt = vid.prompt, text = j['dialogue']["dialogue"].strip())
+            for image in j['images']:
+                l = download_images(image,f'{dir_name}/images/', amount = 1)
+                if len(l) > 0:
+                    SpeechImage.objects.create(scene = scene, file = l[0])
 
         vid.save()
 
@@ -58,6 +65,7 @@ class TestView(viewsets.ModelViewSet):
 
         return Response({"message": "The video has been made successfully",
                          "result": VideoSerializer(result).data})
+
 @api_view(['POST'])
 @permission_classes([AllowAny])
 def downloadPlaylist(request):

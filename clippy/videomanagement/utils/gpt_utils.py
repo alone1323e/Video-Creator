@@ -31,8 +31,10 @@ def get_reply(prompt, time=0, reply_format="json", gpt_model='gpt-3.5-turbo'):
         x += message
 
     if reply_format == "json":
+
+
+        x = x[x.index('{'):len(x) - (x[::-1].index('}'))]
         print(x)
-        x = x[x.index('{'):]
         try:
 
             js = json.loads(x)

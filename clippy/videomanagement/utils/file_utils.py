@@ -10,6 +10,7 @@ def generate_directory(name, x=0):
         if not os.path.exists(dir_name):
             os.mkdir(dir_name)
             os.mkdir(f'{dir_name}\\dialogues')
+            os.mkdir(f'{dir_name}\\images')
 
             return dir_name
         else:
