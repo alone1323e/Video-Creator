@@ -5,7 +5,7 @@ from rest_framework.permissions import AllowAny
 from rest_framework import viewsets
 from .utils.video_utils import make_video
 from rest_framework.decorators import api_view, permission_classes
-from .utils.download_utils import download_playlist, download_images
+from .utils.download_utils import download_playlist, create_image_scenes
 from .utils.prompt_utils import format_prompt
 from .utils.gpt_utils import get_reply
 from .utils.audio_utils import make_scenes_speech
@@ -34,7 +34,8 @@ class TestView(viewsets.ModelViewSet):
         voice_id = request.data.get('voice_id', 1)
         title = request.data.get('title')
         prompt = request.data.get('prompt')
-        gptModel = request.data.get('gpt_model')
+        gptModel = request.data.get('gpt_model', 'gpt-3.5-turbo')
+        image_webscrap = request.data.get('image_webscrap', True)
         target_audience = request.data.get('target_audience')
 
         template = TemplatePrompts.objects.get(id = template_id)
@@ -52,12 +53,8 @@ class TestView(viewsets.ModelViewSet):
         dir_name = generate_directory(f'media\\media\\videos\\{slugify(x["title"])}')
         make_scenes_speech(x, vid, voice_model, dir_name)
 
-        for j in vid.gpt_answer['scenes']:
-            scene = Speech.objects.get(prompt = vid.prompt, text = j['dialogue']["dialogue"].strip())
-            for image in j['images']:
-                l = download_images(image,f'{dir_name}/images/', amount = 1)
-                if len(l) > 0:
-                    SpeechImage.objects.create(scene = scene, file = l[0])
+        if image_webscrap:
+            create_image_scenes(vid,dir_name)
 
         vid.save()
 

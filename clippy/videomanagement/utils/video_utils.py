@@ -1,4 +1,4 @@
-from .file_utils import select_music
+from .file_utils import select_music, select_background
 from moviepy.editor import AudioFileClip, concatenate_audioclips, CompositeAudioClip, ImageClip, VideoFileClip,vfx,\
     concatenate_videoclips, CompositeVideoClip
 from ..models import *
@@ -10,7 +10,10 @@ def make_video(video, dir_name, music=True):
     silent = AudioFileClip('media\\media\\sound_effects\\blank.wav')
     black = ImageClip('media\\media\\stock_images\\black.jpg')
     sounds = Speech.objects.filter(prompt = video.prompt)
-    clip = ImageClip("media/other/back.jpg")
+
+    background = select_background(template.category)
+
+    clip = ImageClip(background.file.path)
     w, h = clip.size
     sound_list = []
     vids = []
@@ -35,7 +38,11 @@ def make_video(video, dir_name, music=True):
         else:
             vids.append(black.set_duration(audio.duration+2))
 
-    final_video = concatenate_videoclips(vids).margin(top=65, left = 355, opacity=4)
+
+    #top=65, left = 355, opacity=4
+    final_video = concatenate_videoclips(vids).margin(top=background.image_pos_top, left = background.image_pos_left,
+                                                      opacity=4)
+
     final_audio = concatenate_audioclips(sound_list)
     final_audio.write_audiofile(f"{dir_name}\\output_audio.wav")
     if music:
@@ -48,16 +55,15 @@ def make_video(video, dir_name, music=True):
         music = music.audio_fadein(4).audio_fadeout(4)
         final_audio = CompositeAudioClip([final_audio, music])
 
-
     clip = clip.set_duration(final_audio.duration)
     clip = clip.set_audio(final_audio)
 
+    color = [int(x) for x in background.color.split(',')]
 
-
-    masked_clip = clip.fx(vfx.mask_color, color = [0, 163, 232], thr = 60, s = 7)
+    masked_clip = clip.fx(vfx.mask_color, color = color, thr = background.through, s = 7)
 
     final_clip = CompositeVideoClip([final_video,
-        masked_clip.set_duration(final_audio.duration)
+                                    masked_clip.set_duration(final_audio.duration)
     ], size = (1920, 1080))
 
     intro = VideoFileClip(Intro.objects.filter(category = template.category)[0].file.path)

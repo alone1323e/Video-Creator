@@ -1,5 +1,5 @@
 from pytube import Playlist
-from ..models import Music
+from ..models import Music, Speech, SpeechImage
 import os
 import uuid
 from bing_image_downloader import downloader
@@ -23,9 +23,19 @@ def download_playlist(url, category):
     return True
 
 
-def download_images(query, path, amount=1):
+def download_image(query, path, amount=1):
 
-       images = downloader.download(query = f'{query} hd', limit = amount, output_dir = path, adult_filter_off = True,
+       return downloader.download(query = f'{query} hd', limit = amount, output_dir = path, adult_filter_off = True,
                             force_replace = False, timeout = 60, )
 
-       return images
+
+def create_image_scenes(video, dir_name):
+    for j in video.gpt_answer['scenes']:
+        scene = Speech.objects.get(prompt = video.prompt, text = j['dialogue']["dialogue"].strip())
+        for image in j['images']:
+            l = download_image(image, f'{dir_name}/images/', amount = 1)
+            if len(l) > 0:
+                SpeechImage.objects.create(scene = scene, file = l[0])
+
+
+

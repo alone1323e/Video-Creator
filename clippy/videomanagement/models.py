@@ -92,3 +92,16 @@ class Outro(AbstractModel):
     file = models.FileField(upload_to = "media/other/outros")
 
 
+class Backgrounds(AbstractModel):
+    category = models.CharField(max_length = 30, choices = TEMPLATE_CHOICES)
+    name = models.CharField(max_length = 100)
+    file = models.FileField(upload_to = "media/other/backgrounds")
+    color = models.CharField(max_length = 30)
+    image_pos_top = models.IntegerField()
+    image_pos_left = models.IntegerField()
+    avatar_pos_top = models.IntegerField()
+    avatar_pos_left = models.IntegerField()
+    through = models.IntegerField(default = 6)
+    def __str__(self):
+        return self.name
+

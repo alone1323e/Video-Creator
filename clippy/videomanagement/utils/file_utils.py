@@ -1,6 +1,6 @@
 import os
 from random import randint
-from ..models import Music
+from ..models import Music, Backgrounds
 
 
 def generate_directory(name, x=0):
@@ -23,3 +23,11 @@ def select_music(category=None):
 
     music = Music.objects.filter(category = category)
     return music[randint(0, music.count() - 1)]
+
+
+def select_background(category=None):
+    if category is None:
+        raise Exception('You need to add a category')
+
+    back = Backgrounds.objects.filter(category = category)
+    return back[randint(0, back.count() - 1)]

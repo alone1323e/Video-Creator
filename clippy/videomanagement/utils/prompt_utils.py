@@ -18,7 +18,7 @@ def format_prompt(template, userprompt="", title='', target_audience=''):
              f"The target audience : {target_audience}" \
              f"The information that you need are here : {userprompt}  \n" \
              f"The format of your answer must be like that in {template.format}" \
-             f"The json must be valid !" \
-             f"The links put them inside the json and dont include any other messages except json"
+             f"the images must contain only 1 value" \
+
 
     return output
