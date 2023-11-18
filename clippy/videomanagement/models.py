@@ -102,6 +102,16 @@ class Backgrounds(AbstractModel):
     avatar_pos_top = models.IntegerField()
     avatar_pos_left = models.IntegerField()
     through = models.IntegerField(default = 6)
+
+    def __str__(self):
+        return self.name
+
+
+class Avatars(AbstractModel):
+    gender = models.CharField(max_length = 10)
+    file = models.FileField(upload_to = "media/other/avatars")
+    voice = models.ForeignKey(VoiceModels, null = True, on_delete = models.SET_NULL, default = 1)
+
     def __str__(self):
         return self.name
 

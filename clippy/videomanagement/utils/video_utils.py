@@ -5,7 +5,7 @@ from ..models import *
 from PIL import Image
 
 
-def make_video(video, dir_name, music=True):
+def make_video(video, dir_name, music=True, avatar=False):
     template = video.prompt.template
     silent = AudioFileClip('media\\media\\sound_effects\\blank.wav')
     black = ImageClip('media\\media\\stock_images\\black.jpg')
@@ -45,6 +45,9 @@ def make_video(video, dir_name, music=True):
 
     final_audio = concatenate_audioclips(sound_list)
     final_audio.write_audiofile(f"{dir_name}\\output_audio.wav")
+    if avatar :
+        pass
+
     if music:
         selected_music = select_music(template.category)
 

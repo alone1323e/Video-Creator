@@ -36,6 +36,8 @@ class TestView(viewsets.ModelViewSet):
         prompt = request.data.get('prompt')
         gptModel = request.data.get('gpt_model', 'gpt-3.5-turbo')
         image_webscrap = request.data.get('image_webscrap', True)
+        avatar = request.data.get('avatar', False)
+
         target_audience = request.data.get('target_audience')
 
         template = TemplatePrompts.objects.get(id = template_id)
@@ -58,7 +60,7 @@ class TestView(viewsets.ModelViewSet):
 
         vid.save()
 
-        result = make_video(vid, dir_name)
+        result = make_video(vid, dir_name, avatar = avatar)
 
         return Response({"message": "The video has been made successfully",
                          "result": VideoSerializer(result).data})
